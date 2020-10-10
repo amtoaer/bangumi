@@ -31,12 +31,14 @@ type Info struct {
 	Token        string
 	RefreshToken string
 	ExpireTime   time.Time
+	AppID        string
 }
 
 // InfoOperation Info需要实现的操作
 type InfoOperation interface {
 	NewSession() *session.API
 	AccessToken() string
+	APPID() string
 }
 
 var _ OAuthOperation = &OAuth{}
@@ -88,6 +90,7 @@ func (o *OAuth) GetToken() (info *Info) {
 		Token:        container["access_token"].(string),
 		RefreshToken: container["refresh_token"].(string),
 		ExpireTime:   time.Now().Add(time.Second * time.Duration(seconds)),
+		AppID:        o.ClientID,
 	}
 }
 
@@ -113,7 +116,7 @@ func (o *OAuth) UpdateToken(info *Info) {
 	}
 	log.Println("成功更新token")
 	seconds := container["expires_in"].(float64)
-	// 将info内各项替换为新内容
+	// 将info内特定项目替换为新内容
 	info.Token = container["access_token"].(string)
 	info.RefreshToken = container["refresh_token"].(string)
 	info.ExpireTime = time.Now().Add(time.Second * time.Duration(seconds))
@@ -132,4 +135,9 @@ func (i *Info) NewSession() *session.API {
 // AccessToken 得到token
 func (i *Info) AccessToken() string {
 	return i.Token
+}
+
+// APPID 得到AppID
+func (i *Info) APPID() string {
+	return i.AppID
 }
