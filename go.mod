@@ -1,4 +1,4 @@
-module bangumi
+module github.com/amtoaer/bangumi
 
 go 1.15
 
