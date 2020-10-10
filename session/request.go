@@ -8,6 +8,17 @@ import (
 	"net/url"
 )
 
+// Request 基本的get/post操作
+type Request interface {
+	getByte(string) ([]byte, error)
+	get(string) (string, error)
+	getJSON(string) (map[string]interface{}, error)
+	getJSONSlice(string) ([]map[string]interface{}, error)
+	post(string, url.Values) (string, error)
+}
+
+var _ Request = &API{}
+
 func (a *API) getByte(url string) (b []byte, err error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -32,11 +43,20 @@ func (a *API) getJSON(url string) (m map[string]interface{}, err error) {
 	if err != nil {
 		return nil, err
 	}
-	m = make(map[string]interface{})
 	err = json.Unmarshal(content, &m)
 	return
 }
 
+func (a *API) getJSONSlice(url string) (m []map[string]interface{}, err error) {
+	content, err := a.getByte(url)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(content, &m)
+	return
+}
+
+// TODO 完成post基本功能
 func (a *API) post(url string, content url.Values) (string, error) {
 	return "", nil
 }
