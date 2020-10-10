@@ -39,3 +39,13 @@ func Login(clientID, clientSecret string, port string) *auth.Info {
 	}
 	return info
 }
+
+// NoLogin 返回无登录状态的auth.Info
+func NoLogin() *auth.Info {
+	return &auth.Info{
+		Token:        "",
+		RefreshToken: "",
+		ExpireTime:   time.Now(),
+		AppID:        "",
+	}
+}

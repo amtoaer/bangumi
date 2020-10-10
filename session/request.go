@@ -25,8 +25,10 @@ func (a *API) getByte(url string) (b []byte, err error) {
 	if err != nil {
 		return
 	}
-	head := fmt.Sprintf("Bearer %s", a.Info.AccessToken())
-	req.Header.Add("Authorization", head)
+	if a.Info.AccessToken() != "" {
+		head := fmt.Sprintf("Bearer %s", a.Info.AccessToken())
+		req.Header.Add("Authorization", head)
+	}
 	resp, err := a.Client.Do(req)
 	if err != nil || resp.StatusCode != 200 {
 		return
