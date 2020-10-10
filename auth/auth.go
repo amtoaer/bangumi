@@ -2,6 +2,7 @@ package auth
 
 import (
 	"bangumi/helper"
+	"bangumi/session"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,7 +33,14 @@ type Info struct {
 	ExpireTime   time.Time
 }
 
+// InfoOperation Info需要实现的操作
+type InfoOperation interface {
+	NewSession() *session.API
+	AccessToken() string
+}
+
 var _ OAuthOperation = &OAuth{}
+var _ InfoOperation = &Info{}
 
 // GetToken 如果以前未进行过授权，则使用该方法得到token
 func (o *OAuth) GetToken() (info *Info) {
@@ -67,9 +75,9 @@ func (o *OAuth) GetToken() (info *Info) {
 		log.Println("请求token失败")
 		return
 	}
-	data, _ := helper.ReadBody(resp)
+	data, _ := helper.ReadByteBody(resp)
 	container := make(map[string]interface{})
-	err = json.Unmarshal([]byte(data), &container)
+	err = json.Unmarshal(data, &container)
 	if err != nil {
 		log.Println("解析请求结果失败")
 		return
@@ -96,9 +104,9 @@ func (o *OAuth) UpdateToken(info *Info) {
 		log.Println("请求更新token失败")
 		return
 	}
-	data, _ := helper.ReadBody(resp)
+	data, _ := helper.ReadByteBody(resp)
 	container := make(map[string]interface{})
-	err = json.Unmarshal([]byte(data), &container)
+	err = json.Unmarshal(data, &container)
 	if err != nil {
 		log.Println("解析请求结果失败")
 		return
@@ -109,4 +117,19 @@ func (o *OAuth) UpdateToken(info *Info) {
 	info.Token = container["access_token"].(string)
 	info.RefreshToken = container["refresh_token"].(string)
 	info.ExpireTime = time.Now().Add(time.Second * time.Duration(seconds))
+}
+
+// NewSession 为登录结果构造请求结构体
+func (i *Info) NewSession() *session.API {
+	return &session.API{
+		Client: &http.Client{
+			Timeout: 8 * time.Second,
+		},
+		Info: i,
+	}
+}
+
+// AccessToken 得到token
+func (i *Info) AccessToken() string {
+	return i.Token
 }
