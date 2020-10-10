@@ -11,7 +11,7 @@ import (
 // Login 登陆bangumi帐号并获取token信息
 func Login(clientID, clientSecret string, port string) *auth.Info {
 	info, err := config.ParseToken()
-	// 读取解析未出现错误且token未过时
+	// 读取、解析本地缓存未出现错误且token未过时
 	if err == nil && !time.Now().After(info.ExpireTime) {
 		return info
 	}
