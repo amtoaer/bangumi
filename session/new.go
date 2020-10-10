@@ -8,6 +8,7 @@ import (
 type InfoOperation interface {
 	NewSession() *API
 	AccessToken() string
+	APPID() string
 }
 
 // API 辅助进行请求的结构体
