@@ -6,7 +6,7 @@ import (
 	"os"
 	"path"
 
-	"bangumi/auth"
+	"github.com/amtoaer/bangumi/auth"
 
 	"github.com/mitchellh/go-homedir"
 )

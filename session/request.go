@@ -1,11 +1,12 @@
 package session
 
 import (
-	"bangumi/helper"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/amtoaer/bangumi/helper"
 )
 
 // Request 基本的get/post操作

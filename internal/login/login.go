@@ -1,11 +1,13 @@
 package login
 
 import (
-	"bangumi/auth"
-	"bangumi/config"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/amtoaer/bangumi/config"
+
+	"github.com/amtoaer/bangumi/auth"
 )
 
 // Login 登陆bangumi帐号并获取token信息

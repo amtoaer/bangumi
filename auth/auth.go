@@ -1,8 +1,6 @@
 package auth
 
 import (
-	"bangumi/helper"
-	"bangumi/session"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,6 +8,9 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/amtoaer/bangumi/helper"
+	"github.com/amtoaer/bangumi/session"
 )
 
 // OAuth 登录流程需要的信息
